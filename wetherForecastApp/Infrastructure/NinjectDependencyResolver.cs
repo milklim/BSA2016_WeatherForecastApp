@@ -18,6 +18,7 @@ namespace weatherForecastApp.Infrastructure
         private void AddBindings()
         {
             kernel.Bind<IRequestSender>().To<RequestSender>();
+            kernel.Bind<IWeatherService>().To<WeatherService>();
         }
         
         

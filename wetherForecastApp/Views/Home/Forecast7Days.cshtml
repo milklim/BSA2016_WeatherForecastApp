@@ -1,0 +1,39 @@
+﻿@model weatherForecastApp.Models.WeatherForecast7Days
+
+@{
+    ViewBag.Title = "Прогноз на 3 дня";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Forecast7Days</title>
+</head>
+<body>
+    <div>
+        <h4>WeatherForecast7Days</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.cnt)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.cnt)
+            </dd>
+    
+        </dl>
+    </div>
+    <div class="btn-group btn-group-justified">
+        @Html.ActionLink("Погода сегодня", "CurrentWeather", new { cityName = @Model.city.name}, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Прогноз на 3 дня", "Forecast3Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Прогноз на неделю", "Forecast7Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

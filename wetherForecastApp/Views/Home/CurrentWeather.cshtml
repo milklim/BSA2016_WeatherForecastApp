@@ -36,6 +36,11 @@
 
     </dl>
 </div>
+<div class="btn-group btn-group-justified">
+    @Html.ActionLink("Погода сегодня", "CurrentWeather", new { cityName = @Model.name, days = 1 }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на 3 дня", "Forecast3Days", new { cityName = @Model.name }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на неделю", "Forecast7Days", new { cityName = @Model.name }, new { @class = "btn btn-primary" })
+</div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
     @Html.ActionLink("Back to List", "Index")

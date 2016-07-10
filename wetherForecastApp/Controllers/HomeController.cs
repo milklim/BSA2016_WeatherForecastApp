@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Ninject;
-using Ninject.Web.Common;
 using weatherForecastApp.Models;
 using weatherForecastApp.Services;
 
@@ -9,89 +7,61 @@ namespace weatherForecastApp.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private IWeatherService wService;
+        public HomeController(IWeatherService wServiceParam)
         {
-            WeatherService wService = new WeatherService(new RequestSender());
+            wService = wServiceParam;
         }
 
 
-        public ActionResult Index(int cityId, int days)
+        public ActionResult Index(string cityName, int days)
         {
-            WeatherView weatherView = new WeatherView();
-            // Ловим исключения - если не получилось достучаться до сервиса погоды, то переход на страницу ошибки
-            try
+            List<string> cities = new List<string> { "Днепропетровск", "Киев", "Львов", "Одесса", "Харьков" };
+            ViewBag.cityList = cities; ;
+              
+            switch (days)
             {
-                // Если (cityId == 0) - показываем погоду для города по-умолчанию, в данном случае - для Киева
-                if (cityId == 0)
-                {
-                    return View(WeatherService.GetCurrentWeatherByCityId(703448));
-                }
-
-                // Выбираем на какое кол-во дней показать прогноз
-                switch (days)
-                {
-                    case 1:
-                        weatherView = WeatherService.GetCurrentWeatherByCityId(cityId);
-                        break;
-                    case 3:
-                        weatherView = WeatherService.GetWeatherFor3DaysByCityId(cityId);
-                        break;
-                    case 7:
-                        weatherView = WeatherService.GetWeatherFor7DaysByCityId(cityId);
-                        break;
-                }
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Error"); ;
+                case 1:
+                    RedirectToAction("CurrentWeather", cityName);
+                    break;
+                case 3:
+                    RedirectToAction("Forecast3Days", cityName);
+                    break;
+                case 7:
+                    RedirectToAction("ForecastForWeek", cityName);
+                    break;
             }
 
-            return View(weatherView);
+
+            return View(cities);
         }
 
-        [HttpPost]
         public ActionResult CurrentWeather(string cityName)
         {
-            CurrentWeather wView = WeatherService.GetForecast(cityName, TypeOfForecast.CurrentWeather) as CurrentWeather;
+            CurrentWeather wView = wService.GetForecast(cityName, TypeOfForecast.CurrentWeather) as CurrentWeather;
             return View(wView);
         }
 
-        // POST: Home/Index
+    
+        public ActionResult Forecast3Days(string cityName)
+        {
+            WeatherForecast3DaysDetailed wView = wService.GetForecast(cityName, TypeOfForecast.For3Days) as WeatherForecast3DaysDetailed;
+            return View(wView);
+        }
+
+
+        public ActionResult Forecast7Days(string cityName)
+        {
+            WeatherForecast7Days wView = wService.GetForecast(cityName, TypeOfForecast.For7Days) as WeatherForecast7Days;
+            return View(wView);
+        }
+
         [HttpPost]
-        public ActionResult Index(string cityName)
+        public ActionResult PostRequestHandler(string cityName)
         {
-            // Если из поля ввода пришла пустая строка, то возвращаем ту же самую страницу
-            if (cityName=="")
-            {
-                return RedirectToAction("Index");
-            }
-
-            WeatherView weatherView = new WeatherView();
-            // Ловим исключения - если не получилось достучаться до сервиса погоды, то переход на страницу ошибки
-            try
-            {
-                int cityId = (int)WeatherService.GetCityIdByName(cityName);
-                // (cityId == 0) означает что сервис погоды не смог разобрать название города. Переходим на страницу ошибки
-                if (cityId == 0)
-                {
-                    return RedirectToAction("Error");
-                }
-                weatherView = WeatherService.GetCurrentWeatherByCityId(cityId);
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Error");
-            }
-
-            return View(weatherView);
+            return RedirectToAction("CurrentWeather", cityName);
         }
 
-
-
-        public ActionResult Error(string mess)
-        {
-            return View();
-        }
         public ActionResult About()
         {
             return View();
