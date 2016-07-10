@@ -115,7 +115,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\WeatherForecastInfo.cs" />
+    <Compile Include="Models\CurrentWeather.cs" />
+    <Compile Include="Models\WeatherForecast3DaysDetailed.cs" />
+    <Compile Include="Models\WeatherForecast7Days.cs" />
+    <Compile Include="Models\NestedTypesOfJson.cs" />
     <Compile Include="Models\WeatherParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\WeatherServices.cs" />
