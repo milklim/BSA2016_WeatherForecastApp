@@ -9,7 +9,41 @@ namespace weatherForecastApp.Services
     public static class WeatherService
     {
         static string appId = System.Web.Configuration.WebConfigurationManager.AppSettings["openWeatherAppId"];
- 
+
+
+        public static IForecast GetForecast(string cityName, TypeOfForecast type)
+        {
+            string queryParam = string.Empty;
+            IForecast weather = new CurrentWeather();
+            switch (type)
+            {
+                case TypeOfForecast.CurrentWeather:
+                    queryParam = "weather";
+                    weather = new CurrentWeather();
+                    break;
+                case TypeOfForecast.For3Days:
+                    queryParam = "forecast";
+                    //WeatherForecast3DaysDetailed weather = new WeatherForecast3DaysDetailed();
+                    break;
+                case TypeOfForecast.For7Days:
+                    queryParam = "forecast/daily";
+
+                    break;
+                default:
+                    break;
+            }
+            string queryString = String.Format("http://api.openweathermap.org/data/2.5/{0}?q={1}&type=like&units=metric&lang=ru&appid={2}",queryParam , cityName, appId);
+           
+            IRequestSender sender = new RequestSender();
+            string response = sender.SendRequest(queryString);
+
+            weather = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentWeather>(response);
+
+            return (weather as IForecast); 
+        }
+
+        
+
         public static long GetCityIdByName(string name)
         {
             // Формируем строку запроса
