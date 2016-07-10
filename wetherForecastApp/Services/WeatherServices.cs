@@ -3,43 +3,46 @@ using System;
 using System.IO;
 using System.Text;
 using weatherForecastApp.Models;
+using Ninject;
 
 namespace weatherForecastApp.Services
 {
-    public static class WeatherService
+    public class WeatherService
     {
-        static string appId = System.Web.Configuration.WebConfigurationManager.AppSettings["openWeatherAppId"];
-
+        private static string appId = System.Web.Configuration.WebConfigurationManager.AppSettings["openWeatherAppId"];
+        private static IRequestSender requestSender;
+        public WeatherService(IRequestSender reqSenderParam)
+        {
+            requestSender = reqSenderParam; 
+        }
 
         public static IForecast GetForecast(string cityName, TypeOfForecast type)
         {
+            IKernel ninjectKernel = new StandardKernel();
+
             string queryParam = string.Empty;
-            IForecast weather = new CurrentWeather();
             switch (type)
             {
                 case TypeOfForecast.CurrentWeather:
                     queryParam = "weather";
-                    weather = new CurrentWeather();
+                    ninjectKernel.Bind<IForecast>().To<CurrentWeather>();
                     break;
                 case TypeOfForecast.For3Days:
                     queryParam = "forecast";
-                    //WeatherForecast3DaysDetailed weather = new WeatherForecast3DaysDetailed();
+                    ninjectKernel.Bind<IForecast>().To<WeatherForecast3DaysDetailed>();
                     break;
                 case TypeOfForecast.For7Days:
                     queryParam = "forecast/daily";
-
-                    break;
-                default:
+                    ninjectKernel.Bind<IForecast>().To<WeatherForecast7Days>();
                     break;
             }
-            string queryString = String.Format("http://api.openweathermap.org/data/2.5/{0}?q={1}&type=like&units=metric&lang=ru&appid={2}",queryParam , cityName, appId);
-           
-            IRequestSender sender = new RequestSender();
-            string response = sender.SendRequest(queryString);
+            string queryString = String.Format("http://api.openweathermap.org/data/2.5/{0}?q={1}&type=like&units=metric&lang=ru&appid={2}", queryParam, cityName, appId);
+            string response = requestSender.SendRequest(queryString);
 
-            weather = Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentWeather>(response);
+            IForecast weather = ninjectKernel.Get<IForecast>();
+            object ob = Newtonsoft.Json.JsonConvert.DeserializeObject(response, weather.GetType());
 
-            return (weather as IForecast); 
+            return ob as IForecast; 
         }
 
         

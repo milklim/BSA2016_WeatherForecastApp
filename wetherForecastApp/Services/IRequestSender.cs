@@ -1,7 +1,7 @@
 ﻿using System;
 namespace weatherForecastApp.Services
 {
-    interface IRequestSender
+    public interface IRequestSender
     {
         string SendRequest(string request);
     }

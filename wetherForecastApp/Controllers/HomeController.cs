@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
+using Ninject;
+using Ninject.Web.Common;
 using weatherForecastApp.Models;
 using weatherForecastApp.Services;
 
@@ -7,6 +9,12 @@ namespace weatherForecastApp.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController()
+        {
+            WeatherService wService = new WeatherService(new RequestSender());
+        }
+
+
         public ActionResult Index(int cityId, int days)
         {
             WeatherView weatherView = new WeatherView();
@@ -41,6 +49,12 @@ namespace weatherForecastApp.Controllers
             return View(weatherView);
         }
 
+        [HttpPost]
+        public ActionResult CurrentWeather(string cityName)
+        {
+            CurrentWeather wView = WeatherService.GetForecast(cityName, TypeOfForecast.CurrentWeather) as CurrentWeather;
+            return View(wView);
+        }
 
         // POST: Home/Index
         [HttpPost]
@@ -71,6 +85,8 @@ namespace weatherForecastApp.Controllers
 
             return View(weatherView);
         }
+
+
 
         public ActionResult Error(string mess)
         {

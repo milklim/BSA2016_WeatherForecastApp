@@ -1,0 +1,42 @@
+﻿@model weatherForecastApp.Models.CurrentWeather
+
+@{
+    ViewBag.Title = "CurrentWeather";
+}
+
+<h2>CurrentWeather</h2>
+
+<div>
+    <h4>CurrentWeather</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.dt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cod)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

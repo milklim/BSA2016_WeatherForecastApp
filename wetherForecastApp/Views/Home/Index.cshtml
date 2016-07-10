@@ -5,7 +5,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-5">
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                @using (Html.BeginForm("CurrentWeather", "Home", FormMethod.Post))
                 {
                     @Html.Label("Выберете город из списка:")
                     @Html.DropDownList("cityName", new SelectList(new[] { "Днепропетровск", "Киев", "Львов", "Одесса", "Харьков" }),
@@ -17,7 +17,7 @@
                 или
             </div>
             <div class="col-md-5">
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                @using (Html.BeginForm("CurrentWeather", "Home", FormMethod.Post))
                 {
                     @Html.Label("Введите его название:")
                     @Html.TextBox("cityName","", new { @class = "form-control" })
