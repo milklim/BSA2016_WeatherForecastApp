@@ -15,8 +15,8 @@ namespace weatherForecastApp
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{days}/{cityId}",
-                defaults: new { controller = "Home", action = "Index", days = 1, cityId = 0 }
+                url: "{controller}/{action}/{cityName}/{days}",
+                defaults: new { controller = "Home", action = "Index", cityName = UrlParameter.Optional, days = 0 }
             );
         }
     }

@@ -1,0 +1,47 @@
+﻿@model weatherForecastApp.Models.CurrentWeather
+
+@{
+    ViewBag.Title = "CurrentWeather";
+}
+
+<h2>CurrentWeather</h2>
+
+<div>
+    <h4>CurrentWeather</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.dt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cod)
+        </dd>
+
+    </dl>
+</div>
+<div class="btn-group btn-group-justified">
+    @Html.ActionLink("Погода сегодня", "CurrentWeather", new { cityName = @Model.name, days = 1 }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на 3 дня", "Forecast3Days", new { cityName = @Model.name }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на неделю", "Forecast7Days", new { cityName = @Model.name }, new { @class = "btn btn-primary" })
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

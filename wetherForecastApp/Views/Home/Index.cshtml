@@ -1,60 +1,59 @@
-﻿@model weatherForecastApp.Models.WeatherView
+﻿@model List<string>
 @{
     ViewBag.Title = "Главная";
 }
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-md-5">
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                {
-                    @Html.Label("Выберете город из списка:")
-                    @Html.DropDownList("cityName", new SelectList(new[] { "Днепропетровск", "Киев", "Львов", "Одесса", "Харьков" }),
-                                                                     new { @class = "form-control" })
-                    <input type="submit" name="button" value="Узнать погоду" class="btn btn-default" />
-                }
-            </div>
-            <div class="col-md-2">
-                или
-            </div>
-            <div class="col-md-5">
-                @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                {
-                    @Html.Label("Введите его название:")
-                    @Html.TextBox("cityName","", new { @class = "form-control" })
-                    <input type="submit" value="Узнать погоду" class="btn btn-default" />
-                }
-            </div>
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-5">
+            @using (Html.BeginForm("CurrentWeather", "Home", FormMethod.Post))
+            {
+                @Html.Label("Выберете город из списка:")
+                @Html.DropDownList("cityName", new SelectList(Model), new { @class = "form-control" })
+                <input type="submit" name="button" value="Узнать погоду" class="btn btn-default" />
+            }
+        </div>
+        <div class="col-md-2">
+            или
+        </div>
+        <div class="col-md-5">
+            @using (Html.BeginForm("CurrentWeather", "Home", FormMethod.Post))
+            {
+                @Html.Label("Введите его название:")
+                @Html.TextBox("cityName", "", new { @class = "form-control" })
+                <input type="submit" value="Узнать погоду" class="btn btn-default" />
+            }
         </div>
     </div>
-    <div class="btn-group btn-group-justified">
+</div>
+@*<div class="btn-group btn-group-justified">
         @Html.ActionLink("Погода сегодня", "Index", new { cityId = @Model.CityId, days = 1 }, new { @class="btn btn-primary"})
         @Html.ActionLink("Прогноз на 3 дня", "Index", new { cityId = @Model.CityId, days = 3 }, new { @class = "btn btn-primary" })
         @Html.ActionLink("Прогноз на неделю", "Index", new { cityId = @Model.CityId, days = 7 }, new { @class = "btn btn-primary" })
-    </div>
+    </div>*@
 
-<h1>@Model.CityName</h1>
-<div >
-    <table class="table">
-        <tr class="text-center">
-            <th>Дата</th>
-            <th>Описание</th>
-            <th>Облачность, %</th>
-            <th>Влажность, %</th>
-            <th>Давление, гПа</th>
-        </tr>
-        @{
-            foreach (var item in Model.Forecast)
-            {
+@*<h1>@Model.CityName</h1>
+    <div >
+        <table class="table">
+            <tr class="text-center">
+                <th>Дата</th>
+                <th>Описание</th>
+                <th>Облачность, %</th>
+                <th>Влажность, %</th>
+                <th>Давление, гПа</th>
+            </tr>
+            @{
+                foreach (var item in Model.Forecast)
+                {
 
-                <tr class="text-center">
-                    <td><h4>@item.DateForForecast</h4><br><img src="@item.Icon" alt="@item.Description" width="50" height="50"></td>
-                    <td>Температура: @item.Temperature &degC, @item.Description, Ветер @item.WindDirection, скорость @item.WindSpeed м/с</td>
-                    <td>@item.Clouds</td>
-                    <td>@item.Humidity</td>
-                    <td>@item.Pressure</td>
-                </tr>
+                    <tr class="text-center">
+                        <td><h4>@item.DateForForecast</h4><br><img src="@item.Icon" alt="@item.Description" width="50" height="50"></td>
+                        <td>Температура: @item.Temperature &degC, @item.Description, Ветер @item.WindDirection, скорость @item.WindSpeed м/с</td>
+                        <td>@item.Clouds</td>
+                        <td>@item.Humidity</td>
+                        <td>@item.Pressure</td>
+                    </tr>
+                }
             }
-        }
-    </table>
-</div>
+        </table>
+    </div>*@
 
