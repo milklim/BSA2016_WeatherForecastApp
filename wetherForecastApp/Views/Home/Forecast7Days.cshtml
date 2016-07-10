@@ -3,37 +3,56 @@
 @{
     ViewBag.Title = "Прогноз на 3 дня";
 }
+<div class="btn-group btn-group-justified">
+    @Html.ActionLink("Погода сегодня", "CurrentWeather", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на 3 дня", "Forecast3Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Прогноз на неделю", "Forecast7Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
+</div>
+<h1>@Model.city.name</h1>
+<p>@Html.ActionLink("Выбрать другой город", "Index")</p>
+<h3>Прогноз на неделю:</h3>
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Forecast7Days</title>
-</head>
-<body>
-    <div>
-        <h4>WeatherForecast7Days</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.cnt)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.cnt)
-            </dd>
-    
-        </dl>
-    </div>
-    <div class="btn-group btn-group-justified">
-        @Html.ActionLink("Погода сегодня", "CurrentWeather", new { cityName = @Model.city.name}, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Прогноз на 3 дня", "Forecast3Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
-        @Html.ActionLink("Прогноз на неделю", "Forecast7Days", new { cityName = @Model.city.name }, new { @class = "btn btn-primary" })
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+@foreach (var item in @Model.Forecasts)
+{
+    <h4>@ConvertDate(@item.dt)</h4>
+
+    <table class="table">
+
+        <tr>
+            <td>
+                <img src="@String.Format("http://openweathermap.org/img/w/{0}.png", item.weather[0].icon)" alt="@item.weather[0].description" width="50" height="50">
+            </td>
+            <td>
+                Температура: @System.Math.Round(item.temp.day, 1) &degC, @item.weather[0].description, Ветер @WindDir(@item.deg), скорость @item.speed м/с
+                <br>
+                <dl class="dl-horizontal">
+                    <dt>Облачность:</dt>
+                    <dd>@item.clouds %</dd>
+                    <dt>Влажность:</dt>
+                    <dd>@item.humidity %</dd>
+                    <dt>Давление:</dt>
+                    <dd>@item.pressure гПа</dd>
+                </dl>
+            </td>
+        </tr>
+
+    </table>
+
+}
+
+
+
+
+@helper WindDir(double windDeg)
+{
+    string[] windDirections = { "северный", "северный, северо-восточный", "северо-восточный", "восточный, северо-восточный", "восточный", "восточный, юго-восточный", "юго-восточный", "южный, юго-восточный", "южный", "южный, юго-западный", "юго-западный", "западный, юго-западный", "западный", "западный, северо-западный", "северо-западный", "северный, северо-западный" };
+    @windDirections[(int)Math.Round((windDeg - 11.25) / 22.5)];
+}
+@helper ConvertDate(int posix)
+{
+    System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+    dtDateTime = dtDateTime.AddSeconds(posix);
+    @dtDateTime.ToShortDateString();
+}
+
